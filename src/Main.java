@@ -22,27 +22,39 @@ import static java.util.stream.Collectors.*;
 
 public class Main {
     public static void main(String[] args) {
-        Path path = Paths.get("D:\\text.txt");//Р_Мартин_Чистый_код_Создание,_анализ.pdf");
-        byte codingParameter = 1; //кол-во байт рассматриваемых в качестве 1ого символа при формировании алфавита(от 1 до 4) для дальнейших доработок сжатия
+        UI ui = new UI();
+        //  Path path = Paths.get("D:\\text.txt");//Р_Мартин_Чистый_код_Создание,_анализ.pdf");
+        Path path = Paths.get(ui.getAnswerWithTest("Write an existing filepath to continue",
+                x -> Paths.get(x).toFile().exists(),"File with that path doesn't exist"));
 
-        Path squeezedFilePath= Paths.get(path.getParent()
-                +File.separator
-                +"squeezed_"
-                +path.getFileName());
+        if (ui.getAnswerWithTest("Do you want to squeeze or restore file? (s/r)",
+                x -> x.equals("r") || x.equals("s")).equals("s")) {
 
-        Path restoredFilePath = Paths.get(squeezedFilePath.getParent()
-                +File.separator
-                +"restored_"
-                +squeezedFilePath.getFileName());
-        try {
-            squeeze(path,squeezedFilePath,codingParameter); //сжимаем файл
-        } catch (IOException e){System.out.println("Ошибка сжатия файла");
-            e.printStackTrace();};
+            byte codingParameter = 1; //кол-во байт рассматриваемых в качестве 1ого символа при формировании алфавита(от 1 до 4) для дальнейших доработок сжатия
+            Path squeezedFilePath = Paths.get(path.getParent()
+                    + File.separator
+                    + "squeezed_"
+                    + path.getFileName());
 
-        try{
-        restore(squeezedFilePath,restoredFilePath); //восстанавливаем файл
-        } catch (IOException e){System.out.println("Ошибка восстановления файла");
-            e.printStackTrace();};
+            try {
+                squeeze(path, squeezedFilePath, codingParameter); //сжимаем файл
+            } catch (IOException e) {
+                System.out.println("Error in file squeezing");
+                e.printStackTrace();
+            }
+        } else {
+
+            Path restoredFilePath = Paths.get(path.getParent()
+                    + File.separator
+                    + "restored_"
+                    + path.getFileName());
+            try {
+                restore(path, restoredFilePath); //восстанавливаем файл
+            } catch (IOException e) {
+                System.out.println("Error in file restoration");
+                e.printStackTrace();
+            }
+        }
 
     }
 
