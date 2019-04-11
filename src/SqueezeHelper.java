@@ -35,7 +35,6 @@ public class SqueezeHelper {
                 .toArray(Integer[]::new);
     }
 
-// перевести в кодировку с парными битами (два лидирующих отвечают за длину символа в битах
     public static byte[] coder(Integer[] allBytesGrouped){
         Integer[] sortedUniqueByteGroups =sortedByFrequency(allBytesGrouped);
 

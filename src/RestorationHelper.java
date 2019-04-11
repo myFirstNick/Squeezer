@@ -32,9 +32,8 @@ public class RestorationHelper {
 
     public static BitSet bitsToRestoreGetter (Path squeezedFilePath, int off) throws IOException {
         byte[] allBytes = Files.readAllBytes(squeezedFilePath);
-        ByteBuffer bytesToRestore = ByteBuffer.allocate(allBytes.length);
-        bytesToRestore.put(allBytes).position(off);
-        bytesToRestore.compact();
+        ByteBuffer bytesToRestore = ByteBuffer.allocate(allBytes.length-off);
+        bytesToRestore.put(allBytes,off,allBytes.length-off);
 
         return BitSet.valueOf(bytesToRestore.array());
     }

@@ -31,6 +31,8 @@ public class Squeezer {
     }
 
     public static void restore(Path squeezedFilePath, Path restoredFilePath) throws IOException{
+        int bytesAmount = Files.readAllBytes(squeezedFilePath).length;
+
         InputStream byteReader = Files.newInputStream(squeezedFilePath);
         byte codingParameter = (byte) byteReader.read();
 
@@ -43,6 +45,7 @@ public class Squeezer {
         Map<Integer, ByteBuffer> restorationMap =  RestorationHelper.restorationMapConstructor(alphabetBytes, codingParameter);
 
         BitSet bitsToRestore=RestorationHelper.bitsToRestoreGetter(squeezedFilePath,1+codingParameter+alphabetLen);
+
         byte [] bytesRestored = RestorationHelper.decoder(bitsToRestore,restorationMap,codingParameter);
 
         Files.write(restoredFilePath,bytesRestored);
