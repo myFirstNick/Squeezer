@@ -6,10 +6,9 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RestorationHelper {
-    private RestorationHelper(){};
+class RestorationHelper {
 
-    public static int alphabetLenConstructor (byte [] alphabetLenBytes, int codingParameter){
+    int alphabetLenConstructor (byte [] alphabetLenBytes, int codingParameter){
         int alphabetLen = 0;
         for (int i =codingParameter-1;i>-1; i--) alphabetLen =(alphabetLen<< 8*(codingParameter-1-i)) + (int) alphabetLenBytes[i];
         if (alphabetLen==0) alphabetLen=(int) Math.pow(256 ,codingParameter);
@@ -17,7 +16,7 @@ public class RestorationHelper {
         return alphabetLen;
     }
 
-    public static Map<Integer, ByteBuffer> restorationMapConstructor (byte [] alphabetBytes, int codingParameter) {
+    Map<Integer, ByteBuffer> restorationMapConstructor (byte [] alphabetBytes, int codingParameter) {
         int alphabetLen = alphabetBytes.length;
 
         Map<Integer,ByteBuffer> restorationMap =  new HashMap<>();
@@ -30,7 +29,7 @@ public class RestorationHelper {
         return restorationMap;
     }
 
-    public static BitSet bitsToRestoreGetter (Path squeezedFilePath, int off) throws IOException {
+    BitSet bitsToRestoreGetter (Path squeezedFilePath, int off) throws IOException {
         byte[] allBytes = Files.readAllBytes(squeezedFilePath);
         ByteBuffer bytesToRestore = ByteBuffer.allocate(allBytes.length-off);
         bytesToRestore.put(allBytes,off,allBytes.length-off);
@@ -38,7 +37,7 @@ public class RestorationHelper {
         return BitSet.valueOf(bytesToRestore.array());
     }
 
-    public static byte[] decoder(BitSet bitsToRestore, Map<Integer,ByteBuffer> restorationMap, int codingParameter){
+    byte[] decoder(BitSet bitsToRestore, Map<Integer,ByteBuffer> restorationMap, int codingParameter){
         int [] squeezedValues = bitsToRestore.stream().toArray();
         ByteBuffer restoredBytes = ByteBuffer.allocate(squeezedValues.length*codingParameter);
 

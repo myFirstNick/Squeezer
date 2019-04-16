@@ -2,18 +2,21 @@ import java.util.Scanner;
 import java.util.function.Predicate;
 
 public class UI {
+    private String question;
+    private Scanner in = new Scanner(System.in);
 
-    private UI(){}
+    public UI(String quest){
+        this.question=quest;
+    }
 
-    public static String getAnswer(String question) {
+    public String getAnswer() {
         Scanner in = new Scanner(System.in);
         System.out.println(question);
 
         return in.next();
     }
 
-    public static String getAnswerWithTest (String question, Predicate<String> predicate){
-        Scanner in = new Scanner(System.in);
+    public String getAnswerWithTest (Predicate<String> predicate){
         System.out.println(question);
         while (true) {
             String ans = in.next();
@@ -21,8 +24,7 @@ public class UI {
         }
     }
 
-    public static String getAnswerWithTest (String question, Predicate<String> predicate, String errorStatement){
-        Scanner in = new Scanner(System.in);
+    public String getAnswerWithTest (Predicate<String> predicate, String errorStatement){
         System.out.println(question);
         while (true) {
             String ans = in.next();

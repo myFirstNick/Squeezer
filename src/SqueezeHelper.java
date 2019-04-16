@@ -8,10 +8,9 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
-public class SqueezeHelper {
+class SqueezeHelper {
 
-    private SqueezeHelper(){};
-    public static Integer[] bytesGroupingByParameter(byte[] allBytes, byte codingParameter) {
+    Integer[] bytesGroupingByParameter(byte[] allBytes, byte codingParameter) {
         int mask = 255;
         int len = allBytes.length / codingParameter;
         len = len*codingParameter<allBytes.length ? len+1 : len;// округление вверх
@@ -25,7 +24,7 @@ public class SqueezeHelper {
         return allBytesGrouped;
     }
 
-    public static Integer[] sortedByFrequency(Integer[] allBytesGrouped) {
+    private Integer[] sortedByFrequency(Integer[] allBytesGrouped) {
         return Arrays.stream(allBytesGrouped)
                 .collect(groupingBy(identity(),counting()))
                 .entrySet()
@@ -35,7 +34,7 @@ public class SqueezeHelper {
                 .toArray(Integer[]::new);
     }
 
-    public static byte[] coder(Integer[] allBytesGrouped){
+    byte[] coder(Integer[] allBytesGrouped){
         Integer[] sortedUniqueByteGroups =sortedByFrequency(allBytesGrouped);
 
         Map <Integer,Integer> squeezingMap = new HashMap<>();
@@ -50,17 +49,18 @@ public class SqueezeHelper {
         return bits.toByteArray();
     }
 
-    public static byte[] bytesToAlphabet(Integer[] allBytesGrouped, byte codingParameter) {
+    byte[] bytesToAlphabet(Integer[] allBytesGrouped, byte codingParameter) {
         Integer[] sortedUniqueByteGroups =sortedByFrequency(allBytesGrouped);
         ByteBuffer alphabet = ByteBuffer.allocate(sortedUniqueByteGroups.length*codingParameter);
 
-        for (int i = 0; i < sortedUniqueByteGroups.length; i++){
-            for(int j=0; j< codingParameter; j++) alphabet.put((byte) (sortedUniqueByteGroups[i] >>> 8*(codingParameter-1-j)));
+        for (Integer sortedUniqueByteGroup : sortedUniqueByteGroups) {
+            for (int j = 0; j < codingParameter; j++)
+                alphabet.put((byte) (sortedUniqueByteGroup >>> 8 * (codingParameter - 1 - j)));
         }
         return alphabet.array();
     }
 
-    public static byte[] intToByteArr(Integer alphabetLen, byte codingParameter) {
+    byte[] intToByteArr(Integer alphabetLen, byte codingParameter) {
         byte[] alphabetLenBytes = new byte[codingParameter];
         for (int i = 0; i < codingParameter; i++) alphabetLenBytes[i]= (byte) (alphabetLen >>> 8*i);
         return alphabetLenBytes;
